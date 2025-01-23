@@ -2,3 +2,4 @@ numpy
 jupyterlab
 scikit-learn
 openai
+mem0ai

@@ -2,9 +2,11 @@ import os
 import sqlite3
 
 from openai import OpenAI
+from mem0 import MemoryClient
 
 # defaults ## TODO: deal with this better
-__OPENAI_API_KEY_PATH__=".openai"
+__MEM0_API_KEY_PATH__ = ".mem0"
+__OPENAI_API_KEY_PATH__ = ".openai"
 __DATABASE_PATH__ = "data/movie.sqlite"
 __SYSTEM_PROMPT_FILES__ = {
     "select_tables" : "system/select_tables.txt",
@@ -14,7 +16,7 @@ __SCHEMA_TXT__ = "data/schema.txt" ## TODO: make this a random temporary file
 __OPENAI_MODEL__ = "gpt-4o"
 
 class Querybot():
-    def __init__(self, database_path=__DATABASE_PATH__, schema_txt=__SCHEMA_TXT__, api_key_path=__OPENAI_API_KEY_PATH__, model=__OPENAI_MODEL__, system_files=__SYSTEM_PROMPT_FILES__): 
+    def __init__(self, database_path=__DATABASE_PATH__, schema_txt=__SCHEMA_TXT__, openai_key_path=__OPENAI_API_KEY_PATH__, model=__OPENAI_MODEL__, system_files=__SYSTEM_PROMPT_FILES__, mem0_key_path=__MEM0_API_KEY_PATH__): 
         # args/settings/params
         self.db_path = database_path
         self.schema_txt = schema_txt
@@ -23,15 +25,18 @@ class Querybot():
         # setup
         self.db_conn = self.connect()
         self.db_schema = self.init_schema()
-        if os.path.exists(api_key_path):
+        if os.path.exists(openai_key_path):
             # read key from local file and connect to the OpenAI API
-            self.client = OpenAI(api_key=open(api_key_path).read())
+            self.openai = OpenAI(api_key=open(openai_key_path).read())
         else:
-            self.client = OpenAI() # backup option: read env vars
+            self.openai = OpenAI() # backup option: read env vars
+        self.mem0 = MemoryClient(api_key=open(mem0_key_path).read())
+        self.user_id = 42 ## TODO
         return
     
     def query(self, user_query:str) -> str:
         """Query the IMDB database using LLM-generated SQL."""
+        self.mem0.add(user_query, user_id=self.user_id)
         return self.format_output(
             user_query, 
             self.execute_sql(
@@ -88,7 +93,7 @@ class Querybot():
         """
         Run the query with optional `system_message` on the selected model.
         """
-        return self.client.chat.completions.create(
+        return self.openai.chat.completions.create(
             model=self.model,
             messages=[
                 {"role": "system", "content": system_message},
@@ -129,4 +134,7 @@ class Querybot():
 
 
 if __name__ == "__main__":
-    print(Querybot().query("List the most popular movies from the years 2000-2006."))
+    bot = Querybot()
+    query = "List the most popular movies from the years 2000-2006."
+    print(bot.query(query))
+    print(bot.mem0.search(query))
