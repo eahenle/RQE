@@ -1,0 +1,4 @@
+numpy
+jupyterlab
+scikit-learn
+openai
