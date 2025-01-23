@@ -169,3 +169,13 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+.openai
+.~*
+.zip
+data
+
+*.pptx
+*.png
+*.m4a
+*.url
