@@ -1,4 +1,6 @@
 from FrontEnd import FrontEnd
 
-if __name__ == "__main__":
+def launch():
     FrontEnd().run()
+
+__name__ == "__main__" and launch()
