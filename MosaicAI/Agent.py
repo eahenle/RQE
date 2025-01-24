@@ -4,9 +4,15 @@ from mem0 import MemoryClient
 from defaults import _DEFAULTS
 
 class Agent():
+    """
+    Agent is the super-class to all AI agents in the MosaicAI system.
+    It provides a common interface for all agents to interact with the OpenAI API and the mem0 API.
+    """
     def __init__(self, openai_key_path=_DEFAULTS["OpenAI API key path"], model=_DEFAULTS["OpenAI model"], mem0_key_path=_DEFAULTS["mem0 API key path"]): 
         # args/settings/params
         self.model = model
+        self.system_message = {}
+        self.agents = {}
         # setup
         if os.path.exists(openai_key_path):
             # read key from local file and connect to the OpenAI API
@@ -24,7 +30,7 @@ class Agent():
         return self.openai.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": system_message},
-                {"role": "user", "content": usr_query}
+                {"role" : "system", "content" : system_message},
+                {"role" : "user", "content" : usr_query}
             ]
-        ).choices[0].message
+        ).choices[0].message.content
