@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# if on WSL2:Ubuntu, set X display
+if [ -f .wsl2 ]; then
+    export DISPLAY=$WORKSTATION_IP:0.0
+fi
+
+. ./venv/bin/activate
