@@ -1,3 +1,4 @@
+from Agent import Agent
 from openai import OpenAI
 from mem0 import MemoryClient
 import os
@@ -14,8 +15,9 @@ __SYSTEM_PROMPT_FILES__ = {
 __SCHEMA_TXT__ = "data/schema.txt" ## TODO: make this a random temporary file
 __OPENAI_MODEL__ = "gpt-4o"
 
-class Querybot():
+class IMDBot(Agent):
     def __init__(self, database_path=__DATABASE_PATH__, schema_txt=__SCHEMA_TXT__, openai_key_path=__OPENAI_API_KEY_PATH__, model=__OPENAI_MODEL__, system_files=__SYSTEM_PROMPT_FILES__, mem0_key_path=__MEM0_API_KEY_PATH__): 
+        super().__init__(openai_key_path=openai_key_path, model=model, mem0_key_path=mem0_key_path)
         # args/settings/params
         self.db_path = database_path
         self.schema_txt = schema_txt
@@ -24,13 +26,6 @@ class Querybot():
         # setup
         self.db_conn = self.connect()
         self.db_schema = self.init_schema()
-        if os.path.exists(openai_key_path):
-            # read key from local file and connect to the OpenAI API
-            self.openai = OpenAI(api_key=open(openai_key_path).read())
-        else:
-            self.openai = OpenAI() # backup option: read env vars
-        self.mem0 = MemoryClient(api_key=open(mem0_key_path).read())
-        self.user_id = 42 ## TODO
         return
     
     def query(self, user_query:str) -> str:
