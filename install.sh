@@ -1,7 +1,8 @@
-#! /bin/bash
+#!/bin/bash
 
-python -m venv --symlinks --clear venv
+# set python version to build venv from
+PYTHON="python3.12"
 
-. ./venv/bin/activate
-
+$PYTHON -m venv --symlinks --clear venv || exit 1
+. ./venv/bin/activate || exit 1
 python -m pip install -r requirements.txt
