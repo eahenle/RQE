@@ -27,6 +27,8 @@ class Agent():
         """
         Run the query with optional `system_message` on the selected model.
         """
+        if len(system_message) == 0:
+            system_message = ""
         return self.openai.chat.completions.create(
             model=self.model,
             messages=[

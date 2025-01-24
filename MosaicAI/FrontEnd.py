@@ -1,8 +1,10 @@
 import tkinter as tk
 from tkinter import scrolledtext
+from Agent import Agent
 
-class FrontEnd():
-    def __init__(self, root=tk.Tk()):
+class FrontEnd(Agent):
+    def __init__(self, root=tk.Tk(), **kwargs):
+        super().__init__(**kwargs)
         self.root = root
         self.root.title("Mosaic RQE")
 
@@ -34,8 +36,7 @@ class FrontEnd():
         self.chat_area.yview(tk.END)
 
     def get_bot_response(self, message):
-        # Placeholder for bot response logic
-        return "This is a placeholder response."
+        return self.query(message, self.system_message)
     
     def run(self):
         self.root.mainloop()
