@@ -1,6 +1,5 @@
 from Agent import Agent
-from openai import OpenAI
-from mem0 import MemoryClient
+from defaults import _DEFAULTS
 import os
 import sqlite3
 
@@ -16,7 +15,7 @@ __SCHEMA_TXT__ = "data/schema.txt" ## TODO: make this a random temporary file
 __OPENAI_MODEL__ = "gpt-4o"
 
 class IMDBot(Agent):
-    def __init__(self, database_path=__DATABASE_PATH__, schema_txt=__SCHEMA_TXT__, openai_key_path=__OPENAI_API_KEY_PATH__, model=__OPENAI_MODEL__, system_files=__SYSTEM_PROMPT_FILES__, mem0_key_path=__MEM0_API_KEY_PATH__): 
+    def __init__(self, database_path=__DATABASE_PATH__, schema_txt=__SCHEMA_TXT__, openai_key_path=_DEFAULTS["OpenAI API key path"], model=_DEFAULTS["OpenAI model"], system_files=__SYSTEM_PROMPT_FILES__, mem0_key_path=_DEFAULTS["mem0 API key path"]): 
         super().__init__(openai_key_path=openai_key_path, model=model, mem0_key_path=mem0_key_path)
         # args/settings/params
         self.db_path = database_path
