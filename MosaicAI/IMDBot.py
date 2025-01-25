@@ -108,14 +108,16 @@ class IMDBot(Agent):
         The list of `tables` is used to confine the SQL's scope.
         """
         # parse tables metadata from schema
+        schema = open(self.schema_txt,"r").readlines()
         tables_data = ""
-        for scheme in open(self.schema_txt,"r").readlines():
+        for scheme in schema:
             data = scheme.split(";")
             if data[0].strip() in tables:
                 tables_data += data[1] + '\n'
         # generate the system prompt
         system_message = open(self.system_files["create_sql_query"], "r").read()
         system_message = system_message.replace("{tables}", tables_data)
+        system_message = system_message.replace("{schema}", f"{schema}")
         # generate the SQL
         content = self.call_model(user_query, system_message).content
         # strip markdown
@@ -124,10 +126,3 @@ class IMDBot(Agent):
     
     def format_output(self, raw_output:str) -> str:
         return raw_output ## TODO: actually do something with formatting
-
-
-if __name__ == "__main__":
-    bot = Querybot()
-    query = "List the most popular movies from the years 2000-2006."
-    print(bot.query(query))
-    print(bot.mem0.search(query))
