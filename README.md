@@ -1,4 +1,4 @@
-# querybot
+# MosaicAI Router Query Engine
 
 End-to-end pipeline for querying a database of movie data using natural language.
 
@@ -19,3 +19,5 @@ $ ./install
 ```shell
 $ ./launch
 ```
+
+Type queries in the text box and chat with the RQE planning agent.
