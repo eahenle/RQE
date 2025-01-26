@@ -4,9 +4,23 @@ End-to-end pipeline for querying a database of movie data using natural language
 
 ## Requirements
 
-> python3.12, python3.12-tk
+### Python
+
+> python3.12, python3.12-venv, python3.12-tk
 
 It could probably work on others, but I haven't tried. `## TODO: try`
+
+### OpenAI
+
+> OpenAI API key
+
+Save this key in `.openai` and **NEVER** store in a public place or commit to git.
+
+### `mem0`
+
+> `mem0` API key
+
+Save this key in `.mem0` and **NEVER** store in a public place or commit to git.
 
 ## Installation
 
