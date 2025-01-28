@@ -6,9 +6,11 @@ End-to-end pipeline for querying a database of movie data using natural language
 
 ### Python
 
-> python3.12, python3.12-venv, python3.12-tk
+> python3.12
 
-It could probably work on others, but I haven't tried. `## TODO: try`
+### System
+
+> curl, unzip, python3.12-venv, python3.12-tk
 
 ### OpenAI
 
