@@ -33,4 +33,5 @@ $PYTHON -m venv --symlinks --clear venv || exit 1
 python -m pip install -r requirements.txt || exit 1
 
 # download databases
+chmod +x download_imdb_data.sh || exit 1
 ./download_imdb_data.sh || exit 1
