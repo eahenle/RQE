@@ -6,7 +6,7 @@ PYTHON="python3.12"
 # deps
 DEPS="$PYTHON $PYTHON-venv $PYTHON-tk unzip curl"
 # check what flavor of linux and install deps
-FAIL(){"echo 'Unsupported Linux distribution $1'; exit 1"}
+FAIL() { echo "Unsupported Linux distribution $1"; exit 1; }
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     if [ "$ID" == "ubuntu" ]; then
