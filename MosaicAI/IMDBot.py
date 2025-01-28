@@ -2,6 +2,7 @@ from Agent import Agent
 from defaults import _DEFAULTS
 import os
 import sqlite3
+from time import time
 
 # defaults ## TODO: deal with this better
 __MEM0_API_KEY_PATH__ = ".mem0"
@@ -27,18 +28,19 @@ class IMDBot(Agent):
         self.db_schema = self.init_schema()
         return
     
-    def query(self, user_query:str) -> str:
+    def query(self, user_query:str, retry_timeout:float=5) -> str:
         """Query the IMDB database using LLM-generated SQL."""
-        self.mem0.add(user_query, user_id=self.user_id)
-        return self.format_output(
-            user_query, 
-            self.execute_sql(
-                self.create_sql_query(
-                    user_query, 
-                    self.select_tables(user_query)
-                )
-            )
-        )
+        starttime = time()
+        while time() - starttime < retry_timeout:
+            try:
+                tables = self.select_tables(user_query)
+                sql_query = self.create_sql_query(user_query, tables)
+                sql_response = self.execute_sql(sql_query)
+                output = self.format_output(user_query, sql_response)
+                self.mem0.add(user_query, user_id=self.user_id)
+                return output
+            except Exception as e:
+                print(e)
 
     def connect(self):
         """Connect to sqlite3 database at `db_path` only if file found."""
