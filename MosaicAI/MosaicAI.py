@@ -1,6 +1,5 @@
-from FrontEnd import FrontEnd
-
 def launch():
+    from FrontEnd import FrontEnd
     FrontEnd().run()
 
 def test():
