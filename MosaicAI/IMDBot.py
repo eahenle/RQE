@@ -126,5 +126,6 @@ class IMDBot(Agent):
         content = content.replace("```sql", "").replace("```", "")
         return content
     
-    def format_output(self, raw_output:str) -> str:
+    def format_output(self, usr_query:str, raw_output:str) -> str:
+        # usr_query argument could be useful for formatting via LLM
         return raw_output ## TODO: actually do something with formatting
