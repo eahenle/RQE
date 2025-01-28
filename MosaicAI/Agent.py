@@ -23,7 +23,7 @@ class Agent():
             # read key from local file and connect to the mem0 API
             self.mem0 = MemoryClient(api_key=open(mem0_key_path).read().strip())
         else:
-            self.mem0 = MemoryClient()
+            self.mem0 = MemoryClient(mem0=os.getenv("MEM0_API_KEY"))
         self.user_id = 42 ## TODO
         return
 
