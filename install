@@ -21,7 +21,7 @@ if [ -f /etc/os-release ]; then
     elif [ "$ID" == "manjaro" ]; then
         sudo pacman -SU --noconfirm $DEPS || exit 1
     else
-        FAIL() $ID
+        FAIL($ID)
     fi
 else
     FAIL()
