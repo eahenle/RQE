@@ -19,7 +19,11 @@ class Agent():
             self.openai = OpenAI(api_key=open(openai_key_path).read().strip())
         else:
             self.openai = OpenAI() # backup option: read env vars
-        self.mem0 = MemoryClient(api_key=open(mem0_key_path).read().strip())
+        if os.path.exists(mem0_key_path):
+            # read key from local file and connect to the mem0 API
+            self.mem0 = MemoryClient(api_key=open(mem0_key_path).read().strip())
+        else:
+            self.mem0 = MemoryClient()
         self.user_id = 42 ## TODO
         return
 
