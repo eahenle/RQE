@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import scrolledtext
-from src.MosaicAI.Agents.RQE import RouterQueryEngine
+from .Agent import RouterQueryEngine
+
+def launch():
+    FrontEnd().run()
 
 class FrontEnd():
     """

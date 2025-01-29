@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 from mem0 import MemoryClient
-from src.MosaicAI.config import _DEFAULTS
+from ..config import _DEFAULTS
 
 class Agent():
     """
@@ -23,8 +23,7 @@ class Agent():
             # read key from local file and connect to the mem0 API
             self.mem0 = MemoryClient(api_key=open(mem0_key_path).read().strip())
         else:
-            print("Error: mem0 API key not found.")
-            exit(1)
+            self.mem0 = MemoryClient(api_key=os.getenv("MEM0_API_KEY"))
         self.user_id = 42 ## TODO
         return
 
