@@ -35,6 +35,9 @@ class IMDBot(Agent):
         # setup
         self.db_conn = self.connect()
         self.db_schema = self.init_schema()
+        self.system_message = open(
+            self.system_files["select_tables"], "r"
+        ).read()
         return
 
     def query(self, user_query: str, retry_timeout: float = 5) -> str:
@@ -42,7 +45,10 @@ class IMDBot(Agent):
         starttime = time()
         while time() - starttime < retry_timeout:
             try:
-                tables = self.select_tables(user_query)
+                tables = self.call_model(
+                    user_query, 
+                    self.system_message
+                ).content.split(",")
                 sql_query = self.create_sql_query(user_query, tables)
                 sql_response = self.execute_sql(sql_query)
                 output = self.format_output(user_query, sql_response)
@@ -108,16 +114,6 @@ class IMDBot(Agent):
             .choices[0]
             .message
         )
-
-    def select_tables(self, user_query: str) -> list:
-        """
-        Use the LLM to choose tables from the database.
-        """
-        system_message = open(
-            self.system_files["select_tables"], "r"
-        ).read()  ## TODO: move file reads to __init__
-        tables = self.call_model(user_query, system_message).content.split(",")
-        return tables  ## TODO: if a table is not in the schema, do something
 
     def create_sql_query(self, user_query: str, tables: list):
         """
