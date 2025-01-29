@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 from .Agent import RouterQueryEngine
+import os
 
 def launch():
     FrontEnd().run()
@@ -12,10 +13,12 @@ class FrontEnd():
 
     Use `FrontEnd.run()` to start the chat interface.
     """
-    def __init__(self, root=tk.Tk(), **kwargs):
+    def __init__(self, tkroot=None, **kwargs):
         super().__init__(**kwargs)
         self.rqe = RouterQueryEngine(**kwargs)
-        self.init_gui(root)
+        if tkroot is None and not os.getenv("CI") == "true":
+            tkroot = tk.Tk()
+        if not tkroot is None: self.init_gui(tkroot)
         return
 
     def init_gui(self, root):
