@@ -9,14 +9,23 @@ __MEM0_API_KEY_PATH__ = ".mem0"
 __OPENAI_API_KEY_PATH__ = ".openai"
 __DATABASE_PATH__ = "data/movie.sqlite"
 __SYSTEM_PROMPT_FILES__ = {
-    "select_tables" : "system/select_tables.txt",
-    "create_sql_query" : "system/create_sql_query.txt"
+    "select_tables": "system/select_tables.txt",
+    "create_sql_query": "system/create_sql_query.txt",
 }
-__SCHEMA_TXT__ = "data/schema.txt" ## TODO: make this a random temporary file
+__SCHEMA_TXT__ = "data/schema.txt"  ## TODO: make this a random temporary file
 __OPENAI_MODEL__ = "gpt-4o"
 
+
 class IMDBot(Agent):
-    def __init__(self, database_path=__DATABASE_PATH__, schema_txt=__SCHEMA_TXT__, openai_key_path=_DEFAULTS["OpenAI API key path"], model=_DEFAULTS["OpenAI model"], system_files=__SYSTEM_PROMPT_FILES__, mem0_key_path=_DEFAULTS["mem0 API key path"]): 
+    def __init__(
+        self,
+        database_path=__DATABASE_PATH__,
+        schema_txt=__SCHEMA_TXT__,
+        openai_key_path=_DEFAULTS["OpenAI API key path"],
+        model=_DEFAULTS["OpenAI model"],
+        system_files=__SYSTEM_PROMPT_FILES__,
+        mem0_key_path=_DEFAULTS["mem0 API key path"],
+    ):
         super().__init__(openai_key_path=openai_key_path, model=model, mem0_key_path=mem0_key_path)
         # args/settings/params
         self.db_path = database_path
@@ -27,8 +36,8 @@ class IMDBot(Agent):
         self.db_conn = self.connect()
         self.db_schema = self.init_schema()
         return
-    
-    def query(self, user_query:str, retry_timeout:float=5) -> str:
+
+    def query(self, user_query: str, retry_timeout: float = 5) -> str:
         """Query the IMDB database using LLM-generated SQL."""
         starttime = time()
         while time() - starttime < retry_timeout:
@@ -49,7 +58,7 @@ class IMDBot(Agent):
         else:
             raise FileNotFoundError(self.db_path)
 
-    def execute_sql(self, query:str) -> list:
+    def execute_sql(self, query: str) -> list:
         """Connect to the database at the indicated path and execute a SQL query."""
         cursor = self.db_conn.cursor()
         cursor.execute(query)
@@ -84,38 +93,44 @@ class IMDBot(Agent):
             f.write(schema)
         return schema
 
-    def call_model(self, query:str, system_message:str="") -> str:
+    def call_model(self, query: str, system_message: str = "") -> str:
         """
         Run the query with optional `system_message` on the selected model.
         """
-        return self.openai.chat.completions.create(
-            model=self.model,
-            messages=[
-                {"role": "system", "content": system_message},
-                {"role": "user", "content": query}
-            ]
-        ).choices[0].message
+        return (
+            self.openai.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": query},
+                ],
+            )
+            .choices[0]
+            .message
+        )
 
-    def select_tables(self, user_query:str) -> list:
+    def select_tables(self, user_query: str) -> list:
         """
         Use the LLM to choose tables from the database.
         """
-        system_message = open(self.system_files["select_tables"], "r").read() ## TODO: move file reads to __init__
+        system_message = open(
+            self.system_files["select_tables"], "r"
+        ).read()  ## TODO: move file reads to __init__
         tables = self.call_model(user_query, system_message).content.split(",")
-        return tables ## TODO: if a table is not in the schema, do something
+        return tables  ## TODO: if a table is not in the schema, do something
 
-    def create_sql_query(self, user_query:str, tables:list):
+    def create_sql_query(self, user_query: str, tables: list):
         """
         Produce a SQL query based on the `user_query` and `schema_file`.
         The list of `tables` is used to confine the SQL's scope.
         """
         # parse tables metadata from schema
-        schema = open(self.schema_txt,"r").readlines()
+        schema = open(self.schema_txt, "r").readlines()
         tables_data = ""
         for scheme in schema:
             data = scheme.split(";")
             if data[0].strip() in tables:
-                tables_data += data[1] + '\n'
+                tables_data += data[1] + "\n"
         # generate the system prompt
         system_message = open(self.system_files["create_sql_query"], "r").read()
         system_message = system_message.replace("{tables}", tables_data)
@@ -125,7 +140,7 @@ class IMDBot(Agent):
         # strip markdown
         content = content.replace("```sql", "").replace("```", "")
         return content
-    
-    def format_output(self, usr_query:str, raw_output:str) -> str:
+
+    def format_output(self, usr_query: str, raw_output: str) -> str:
         # usr_query argument could be useful for formatting via LLM
-        return raw_output ## TODO: actually do something with formatting
+        return raw_output  ## TODO: actually do something with formatting
