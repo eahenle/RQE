@@ -25,7 +25,7 @@ jobs:
       
       - uses: psf/black@stable
         with:
-          options: "-v -l 99 -t py312 -C --exclude .github"
+          options: "-v -l 99 -t py312 -C"
           jupyter: true
           version: "~= 24.8"
       
