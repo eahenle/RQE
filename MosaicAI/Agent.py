@@ -23,7 +23,8 @@ class Agent():
             # read key from local file and connect to the mem0 API
             self.mem0 = MemoryClient(api_key=open(mem0_key_path).read().strip())
         else:
-            self.mem0 = MemoryClient(api_key="m0-kHH4QkCctKs5YtqCtIB4KeolaYfTRKfeHNqpPCcZ")
+            print("Error: mem0 API key not found.")
+            exit(1)
         self.user_id = 42 ## TODO
         return
 
