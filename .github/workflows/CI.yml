@@ -31,4 +31,5 @@ jobs:
         MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
       run: |
         . ./activate
+        echo $MEM0_API_KEY > .mem0
         python MosaicAI/test.py
