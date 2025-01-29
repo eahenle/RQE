@@ -25,7 +25,7 @@ jobs:
     - name: Install
       run: . ./install
 
-    - name: Import MosaicAI
+    - name: MosaicAI
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
