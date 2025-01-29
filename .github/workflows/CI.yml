@@ -29,7 +29,8 @@ jobs:
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
+        CI: ${{ vars.CI }}
       run: |
-        . ./activate
         echo $MEM0_API_KEY > .mem0
-        python MosaicAI/test.py
+        chmod +x test
+        ./test

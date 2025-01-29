@@ -1,6 +1,6 @@
-from Agent import Agent
-from IMDBot import IMDBot
-from defaults import _DEFAULTS
+from ..Agent import Agent
+from ..IMDBot.IMDBot import IMDBot
+from ...config import _DEFAULTS
 
 class RouterQueryEngine(Agent):
     def __init__(self, openai_key_path=_DEFAULTS["OpenAI API key path"], model=_DEFAULTS["OpenAI model"], mem0_key_path=_DEFAULTS["mem0 API key path"]):

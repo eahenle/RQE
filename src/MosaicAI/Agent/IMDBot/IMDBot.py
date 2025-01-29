@@ -1,5 +1,5 @@
-from Agent import Agent
-from defaults import _DEFAULTS
+from ..Agent import Agent
+from ...config import _DEFAULTS
 import os
 import sqlite3
 from time import time
