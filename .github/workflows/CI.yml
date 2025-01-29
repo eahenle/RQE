@@ -29,7 +29,7 @@ jobs:
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
-        CI: true
+        CI: ${{ vars.CI }}
       run: |
         echo $MEM0_API_KEY > .mem0
         chmod +x test
