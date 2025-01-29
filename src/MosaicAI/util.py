@@ -3,22 +3,26 @@ from tkinter import scrolledtext
 from .Agent import RouterQueryEngine
 import os
 
+
 def launch():
     FrontEnd().run()
 
-class FrontEnd():
+
+class FrontEnd:
     """
     FrontEnd is the user interface for the MosaicAI system.
     It provides a simple GUI chat interface for users to interact with the RQE system.
 
     Use `FrontEnd.run()` to start the chat interface.
     """
+
     def __init__(self, tkroot=None, **kwargs):
         super().__init__(**kwargs)
         self.rqe = RouterQueryEngine(**kwargs)
         if tkroot is None and not os.getenv("CI") == "true":
             tkroot = tk.Tk()
-        if not tkroot is None: self.init_gui(tkroot)
+        if not tkroot is None:
+            self.init_gui(tkroot)
         return
 
     def init_gui(self, root):
@@ -29,7 +33,7 @@ class FrontEnd():
         self.root = root
         self.root.title("Mosaic RQE")
         # set up the chat log area
-        self.chat_area = scrolledtext.ScrolledText(root, wrap=tk.WORD, state='disabled')
+        self.chat_area = scrolledtext.ScrolledText(root, wrap=tk.WORD, state="disabled")
         self.chat_area.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
         # set up the user input entry
         self.entry_frame = tk.Frame(root)
@@ -46,19 +50,19 @@ class FrontEnd():
         """
         user_message = self.entry.get()
         if user_message.strip():
-            self.entry.delete(0, tk.END) # clear the text field
-            self.display_message("{user}", user_message) # add user message to chat
-            bot_response = self.rqe.query(user_message) # query the RQE system
-            self.display_message("MosaicAI", bot_response) # add bot response to chat
+            self.entry.delete(0, tk.END)  # clear the text field
+            self.display_message("{user}", user_message)  # add user message to chat
+            bot_response = self.rqe.query(user_message)  # query the RQE system
+            self.display_message("MosaicAI", bot_response)  # add bot response to chat
         return
 
     def display_message(self, sender, message):
-        self.chat_area.config(state='normal')
+        self.chat_area.config(state="normal")
         self.chat_area.insert(tk.END, f"{sender}: {message}\n")
-        self.chat_area.config(state='disabled')
+        self.chat_area.config(state="disabled")
         self.chat_area.yview(tk.END)
         return
-    
+
     def run(self):
         """
         Start the chat interface.
