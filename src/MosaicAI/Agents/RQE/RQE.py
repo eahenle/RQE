@@ -1,5 +1,5 @@
-from Agent import Agent
-from IMDBot import IMDBot
+from src.MosaicAI.Agents.Agent.Agent import Agent
+from src.MosaicAI.Agents.IMDBot.IMDBot import IMDBot
 from defaults import _DEFAULTS
 
 class RouterQueryEngine(Agent):

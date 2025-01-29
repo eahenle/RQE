@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 from mem0 import MemoryClient
-from defaults import _DEFAULTS
+from src.MosaicAI.config import _DEFAULTS
 
 class Agent():
     """
