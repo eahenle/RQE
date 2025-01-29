@@ -1,0 +1,39 @@
+name: format
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  format:
+    # Check if the PR is not raised by this workflow and is not from a fork
+    if: startsWith(github.head_ref, 'black') == false && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - uses: psf/black@stable
+        with:
+          options: "-v -l 99 -t py312 -C --exclude .github"
+          jupyter: true
+          version: "~= 24.8"
+      
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: auto-format
+          title: auto-format
+          body: This is an auto-generated PR with auto-format fixes.
+          branch: auto-format
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: ${{ github.head_ref }}
