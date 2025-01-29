@@ -31,6 +31,5 @@ jobs:
         MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
         CI: ${{ vars.CI }}
       run: |
-        echo $MEM0_API_KEY > .mem0
         chmod +x test
         ./test
