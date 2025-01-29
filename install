@@ -6,7 +6,7 @@ PYTHON="python3.12"
 # deps
 DEPS="$PYTHON $PYTHON-venv $PYTHON-tk unzip curl"
 # check what flavor of linux and install deps
-FAIL(){"echo 'Unsupported Linux distribution $1'; exit 1"}
+FAIL() { echo "Unsupported Linux distribution $1"; exit 1; }
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     if [ "$ID" == "ubuntu" ]; then
@@ -21,10 +21,10 @@ if [ -f /etc/os-release ]; then
     elif [ "$ID" == "manjaro" ]; then
         sudo pacman -SU --noconfirm $DEPS || exit 1
     else
-        FAIL() $ID
+        FAIL "$ID"
     fi
 else
-    FAIL()
+    FAIL "$ID"
 fi
 
 # create virtual environment
@@ -33,4 +33,5 @@ $PYTHON -m venv --symlinks --clear venv || exit 1
 python -m pip install -r requirements.txt || exit 1
 
 # download databases
+chmod +x download_imdb_data.sh || exit 1
 ./download_imdb_data.sh || exit 1

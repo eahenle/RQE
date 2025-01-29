@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: CI
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install
+      run: . ./install
+
+    - name: Import MosaicAI
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
+      run: |
+        . ./activate
+        echo $MEM0_API_KEY > .mem0
+        python MosaicAI/test.py
