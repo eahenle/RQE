@@ -16,7 +16,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment:
+      name: CI
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -24,23 +25,10 @@ jobs:
     - name: Install
       run: . ./install
 
-    - name: testtest
-      env:
-        FOO : ${{ secrets.FOO }} # try to load a secret the right way
-        BAR : ${{ secrets.BAZ }} # test what happens when you ask for a secret that doesn't exist
-      run: |
-        echo $FOO # should print the secret
-        echo ::add-mask::$FOO # should print a mask
-        echo $BAR # should print nothing
-
     - name: Import MosaicAI
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
       run: |
-        echo $FOO # should print the secret
-        echo ::add-mask::$FOO # should print a mask
-        echo $BAR # should print nothing
         . ./activate
-        echo ${{ secrets.MEM0_API_KEY }} > .mem0
         python MosaicAI/test.py
