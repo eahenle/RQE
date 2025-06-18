@@ -1,6 +1,8 @@
-# MosaicAI Router Query Engine
+# Router Query Engine (RQE)
 
 End-to-end pipeline for querying a database of movie data using natural language.
+
+Sort of a proof of concept to explore agentic systems.
 
 ## Requirements
 
@@ -36,4 +38,4 @@ $ ./install
 $ ./launch
 ```
 
-Type queries in the text box and chat with the RQE planning agent.
+Type queries in the text box and chat with the RQE agent.
